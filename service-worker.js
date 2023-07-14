@@ -31,13 +31,15 @@ self.addEventListener('install', function (e) {
     caches.open(CACHE_NAME).then(function (cache) {
       console.log('Installing cache : ' + CACHE_NAME);
       
+      	/*
 	const stack = [];
 	URLS.forEach(file => stack.push(
         	cache.add(file).catch(_=>console.error(`can't load ${file} to cache`))
 	));
 	return Promise.all(stack);      
-      
-      //return cache.addAll(URLS)
+      	*/
+      	
+       return cache.addAll(URLS)
     })
   )
 })
