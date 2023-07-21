@@ -6,8 +6,6 @@
   "start_url": "/pwa-demo/",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
-  // Display of the app. 
-  // "standalone", "fullscreen", "minimal-ui" or "browser"
   "display": "standalone", 
   "icons": [
       {
