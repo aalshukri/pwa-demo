@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Permissions-Policy" content="interest-cohort=()">  
+  <title>Demo PWA</title>
+  <link rel="canonical" href="https://aalshukri.github.io/pwa-demo/" />
+  <link rel="manifest" href="/pwa-demo/manifest.webmanifest">
+</head>
+<body>
+  <h1>Demo PWA</h1>
+  <p>Progressive Web App Demo</p>
+  <script>
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register (
+          '/pwa-demo/service-worker.js',
+          {scope: '/pwa-demo/'}
+        )
+      }
+  </script>
+</body>
+</html>

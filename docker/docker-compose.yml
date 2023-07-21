@@ -1,0 +1,76 @@
+version: "3.1"
+services:
+
+    mysql:
+      image: mysql:8.0
+      container_name: pwa-mysql
+      working_dir: /application
+      environment:
+        - MYSQL_ROOT_PASSWORD=password
+        - MYSQL_DATABASE=webapp
+        - MYSQL_USER=webapp_user
+        - MYSQL_PASSWORD=password
+      volumes:
+        - ../docs:/application
+        - ./setup:/setup
+#        - /mysql:/var/lib/mysql
+      ports:
+        - "1027:3306"
+      networks:
+        static-network:
+          ipv4_address: 172.20.128.3
+
+    webserver:      
+      image: nginx:alpine
+      container_name: pwa-webserver
+      working_dir: /application
+      volumes:
+          - ../docs:/application
+          - ./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+          - ./phpdocker/nginx/domain.crt:/etc/ssl/certs/site.crt
+          - ./phpdocker/nginx/domain.key:/etc/ssl/private/site.key
+      ports:
+       - 80:80
+       - 443:443
+      networks:
+        static-network:
+          ipv4_address: 172.20.128.1
+
+
+    php-fpm:
+      build: phpdocker/php-fpm
+      container_name: pwa-php-fpm
+#      environment:
+#        PHP_IDE_CONFIG: "serverName=172.20.128.2"
+#        XDEBUG_CONFIG: "idekey=PHPSTORM"
+      working_dir: /application
+      volumes:
+        - ../docs:/application
+        - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
+        - ./setup:/setup
+      networks:
+        static-network:
+          ipv4_address: 172.20.128.2
+
+  # DB access via PHP my admin
+    phpmyadmin:
+      image: phpmyadmin
+      container_name: pwa-phpmyadmin
+      environment:
+        - PMA_ARBITRARY=1
+      restart: always
+      ports:
+        - 8181:80
+      networks:
+        static-network:
+          ipv4_address: 172.20.128.4
+
+
+# For static IP addresses
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          #docker-compose v3+ do not use ip_range
+          #ip_range: 172.28.5.0/24
